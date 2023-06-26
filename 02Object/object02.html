@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+</head>
+<body>
+    <div id="ex01">
+        <p>content1</p>
+        <p>content2</p>
+        <p>content3</p>
+    </div>
+    <script>
+        //before()/insertbefore()
+        $('#ex01 p:eq(1)').before('<p>Before</p>')
+        $('<p id="text">insertBefore</p>').insertBefore('#ex01 p:eq(0)')
+
+        //after()/insertafter()
+        $('#ex01 p:last').after('<p>after</p>')
+        $('<p>insertafter</p>').insertAfter('#ex01 p:eq(1)')
+    </script>
+
+    <hr><hr>
+    <div id="ex02">
+        <ul id="listZone">
+            <li>list</li>
+        </ul>
+    </div>
+    <script>
+        //append(),appendTo()자식요소중 맨 마지막으로
+        $('#listZone').append('<li>append()</li>')
+        $('<li>appendTo()</li>').appendTo('#listZone')
+
+        //prepend() preprendTo()자식요소중 맨 앞으로
+        $('#listZone').prepend('<li>prepend()</li>')
+        $('<li>prependTo()</li>').prependTo('#listZone')
+
+    </script>
+
+    <hr><hr>
+    <div id="ex03">
+        <div class="box1">
+            <p>content1</p>
+            <p>content1</p>
+        </div>
+        <div class="box2">
+            <p>content3</p>
+            <p>content4</p>
+        </div>
+        <div class="box3">
+            <p>content5</p>
+            <p>content6</p>
+        </div>
+    </div>
+    <script>
+        //empty(tag의(내부의) 하위요소를 모두 삭제>구조는 삭제x)
+        $('#ex03 .box3').empty()
+
+
+        //remove(해당태그 자체를 삭제)
+        $('#ex03 .box2').remove()
+
+
+        //clone()태그의 하위요소는 물론이고 이벤트까지 복제(dom에 등록되지 않음)
+        //활용 template태그+clone()
+        let copyObj=$('#ex03 .box1').children().clone()
+        $('#ex03 .box3').append(copyObj)
+        
+    </script>
+    <hr><hr>
+    <div id="ex04">
+        <section class="box1">
+            <h2>title</h2>
+            <div>content1</div>
+            <div>content2</div>
+        </section>
+        <section class="box2">
+            <h2>title</h2>
+            <div>content3</div>
+            <div>content4</div>
+        </section>
+    </div>
+
+    <script>
+        //replaceAll()
+        $('<p>change</p>').replaceAll('#ex04 .box1 div')
+
+        //replaceWith()
+        $('#ex04 h2').replaceWith('<h3>replace method</h3>')
+    </script>
+</body>
+</html>
