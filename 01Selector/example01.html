@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <input type="text" id="txDt" value="2023-12-25">
+    </div>
+    <div>
+        <p name="holiday">xmas eve</p>
+        <input type="text" size="3">년
+        <input type="text" class="date" size="3">월
+        <input type="text" size="3">일
+    </div>
+    <div id="msg">
+        <div>
+            <label>
+                <p class="title"></p>
+                <input type="text">
+            </label>
+            <button type="button" onclick="click">개새기야</button>
+        </div>
+    </div>
+
+    <script>
+        let a=document.getElementById('txDt').value
+        
+        let dates=a.split("-")
+        let first=dates[0]
+        let second=dates[1]
+        let third=dates[2]
+        console.log(first, second, third)
+
+        
+
+        // $("[name=holiday]").next().text(first)
+        
+        $('.date').prev().val(first)//input은 value를 갖고 와야함(제이쿼리의 메소드)
+        $('.date').val(second)
+        console.log($('date'))
+        $('.date').next().val(third)
+
+
+        let datess=$('.date').parent().children('input');//제이쿼리가 깨져서 val이 아니라 value를 사용함
+        for(let i=0; i<dates.length; i++){
+            datess[i].value=dates[i]
+        }
+
+        // let holiday=$('#date>div>p').text()
+        // let msg=holiday+'zzzzzzzz'
+        // $('p.title').text(msg)//종속선택자
+
+        // let year=$('.date').prev().val();
+        // let month=$('.date').val();
+        // let day=$('.date').next().val()
+
+        // let newDate =`${year}/${month}/${day-1}`//템플릿문법
+        // $('#msg input').val(newDate);
+
+
+
+        $('button').on('click',function(e){
+            //출력버튼을 눌렀을 떄
+            let holiday=$('#date>div>p').text()
+        let msg=holiday+'zzzzzzzz'
+        $('p.title').text(msg)//종속선택자
+
+        let year=$('.date').prev().val();
+        let month=$('.date').val();
+        let day=$('.date').next().val()
+
+        let newDate =`${year}/${month}/${day-1}`//템플릿문법
+        $('#msg input').val(newDate);
+        })
+
+    </script>
+
+</body>
+</html>

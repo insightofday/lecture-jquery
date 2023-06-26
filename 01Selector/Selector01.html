@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+</head>
+<body>
+    <!-- 호이스팅으로 인해 변수,함수에 관한 것이 첫 줄에 생성됨(같은 파일 내에서만 한정됨:파일로 함수를 호출하려면 선언이 호출에 앞서야 함) -->
+    <!-- <script>
+        let h1Tag=$('#title')
+        h1Tag.css('color','red')
+    </script> -->
+    <script>//태그를 다루는 script는 태그 뒤에 써야 함(제이쿼리는 상관없는덧,,,)
+        // let jqTag=document.getElementById('title');
+        // jqTag.style.color='blue'
+        // getMessage('첫번째script태그');
+        document.addEventListener('DOMContentLoaded',function(e){ //돔cnotentLoaded되려면 파일의 끝까지 컴파일해야 됨
+            getMessage('첫번째script태그');
+            let jqTag=document.getElementById('title');
+            jqTag.style.color='blue'
+        })
+    </script>
+
+    <div>
+    <h1 id="title">title</h1>
+    </div>
+
+    <script>
+        //$(function(e){})밑에거랑똑같음
+        $(document).ready(function(e){//ready가 domcontentloaded랑 같은 역할을 함
+            getMessage('두번째 script 태그')
+            let h1Tag=$('#title')
+            h1Tag.css('color','red')
+        })
+    </script>
+
+    <script src="selector.js"></script>
+    <script> 
+        getMessage('마지막 script 태그')
+    </script>
+
+
+
+<!-- 동적인 방식으로 작동하는 js를 거치면 고정된 태그는 없다고 생각하면 댄다~~란 말,,, -->
+
+
+    <div>
+        <h1 class="blue">jquery</h1>
+        <h2 id="title">선택자</h2>
+        <h3 class="blue">직접선택자</h3>
+        <h4>그룹선택자</h4>
+    </div>
+    <script>
+        //직접선택자(node가 갖고 있는 속성)
+
+        //전체선택자:*(dom의 모든 노드:html, script 포함)
+            $('*').css('border','1px solid blue')
+            //배열을 반환
+
+        //id선택자:#id값
+            $('#title').css('background-color','gray')
+                        .css('border','2px solid black')
+
+        //class선택자:.clzss값
+            let classTag= $('.blue')//배열로 전송됨
+            classTag.text('동일한 내용 적용 이가 댐 니다 damn it')
+            for(let i=0;i<classTag.length;i++){//개별값에 대한 접근은 제이쿼리가 아니라 자바스크립트로 이뤄져야 함(아마도 노드?)
+                // classTag[i].textContent=i;
+                $(classTag[i]).text(i)//제이쿼리로 접근하려면...
+            }
+
+        //태그선택자:태그이름
+            $('<h3/>')//생성시에는 이렇게
+            $('h3').text('직접선택자로 변경')//검색시에는 이렇게
+
+        //그룹선택자:, ,
+            setTimeout(()=>$('h2#title,h4').css('color','green'),1000)
+            //여기서 h2$title이 종속선택자임(공백없이):공백은 하위요소를 선택하는 것임
+
+        //종속선택자:특정 속성을 가진 태그
+            $('h1.blue').text('종속선택자로 선택')
+
+    </script>
+</body>
+
+</html>
