@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <button type="button" id="btn">button1</button>
+    <button type="button">button2</button>
+    
+    <script>
+
+        //함수에서의 this==window
+        //method에서의 this==인스턴스
+        //예외:callback함수는 window를 호출하지 않음(메서드에 따라 그때그때달라용)
+        //   :화살표함수는 this가 동적으로 연동(?)되지 않음:이벤트핸들러 따위에 쓰지마랑~
+
+
+
+        //단일이벤트등록:이벤트별로 개별메소드가 있음
+
+        //trigger:이벤트를 강제로 발생시키는 것(ex:$('#btn').click())
+        $('#btn').click(function(e){//이벤트핸들러라서 이벤트객체가매개변수로넘어옴
+            $('body').append('<p>다닐이벤트등럭</>')
+        })
+        $('#btn').on('click',function(e){
+            alert('on method')
+        })
+
+
+
+
+
+        //그룹이벤트(여러이벤트동시에)둥록:on()
+
+        //==서로 다른 이벤트에 동일한 동작
+        $('#btn').next().on('click mouseover',function(e){
+            $('body').append('<p>그룹이벤트등럭</>')
+        })
+
+        //==각각의 이벤트에 서로 다른 동작 등록
+        $('#btn').next().on({
+            "click":function(e){alert('그룹이벤트로 click햇숨디ㅏ라')},
+            "mouseover":function(e){($('body').append('<p>그룹이벤트등럭</p>'))}
+        })
+
+
+        //특정이벤트에 등록도니 이벤트핸들러삭제:off()
+        //매개변수가 없는 경우 모든 이벤트 삭제
+        //$('#btn').next().off()
+
+        //특정 이벤트의 이벤트핸들러 모두 삭제
+        $('#btn').next().off('click')
+        
+        //특정 이벤트의 이벤트핸들러를 삭제
+        $('#btn').next().on('click',appendTag)
+        $('#btn').next().off('click',appendTag)
+        
+        function appendTag(e){
+            $('body').append('<p>그룹이벤트등럭</p>')
+        }
+    </script>
+</body>
+</html>
