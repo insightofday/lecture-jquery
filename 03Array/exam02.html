@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <div id="list">
+        <div>
+            <h3>대한민국 도시</h3>
+        </div>
+        <div>
+            <h3>국가</h3>
+        </div>
+    </div>
+    <script>
+        //arr1을 도시 밑에 p태그로
+        //arr2를 국가 밑에 p태그로
+        //arr3배열의 지역에 arr1과 연계하여 이름추가
+        let array1=["서울","대전","부산","진주"]
+        let array2=["korea","japan","russia","xoxo"]
+        let array3=[
+            {"name":"kim","area":"서울"},
+            {"name":"kl","area":"대전"},
+            {"name":"lee","area":"부산"},
+            {"name":"park","area":"진주"}
+        ]
+
+        //1번
+        let city=$('#list div:first')
+        $('#list div:contains("도시")')//위랑 똑같음
+        $.each(array1,function(idx,val){
+            let pTag=$('<p/>').text(val)
+            city.append(pTag)
+        })
+
+        //2번
+        city=city.next();
+        $.each(array2,function(idx,val){
+            let pTag=$('<p/>').text(val)
+            city.append(pTag)
+        })
+
+        //3번
+        city=city.prev();
+        let s=$('city p:contains("서울")')
+        let d=$('city p:contains("대전")')
+        let b=$('city p:contains("부산")')
+        let j=$('city p:contains("진주")')
+
+        $('city p').filter(function(idx,element){
+
+        })
+
+
+        //3-1.이중포문사용하기
+        $(array3).each(function(idx,obj){//개별사원정보
+            $('#list div:first >p').each(function(idx,tag){//tag의 text와근무지역비교
+                if(tag.textContent==obj.area){
+                    let pTag=$('<p/>').text('이름 : '+obj.name)
+                    $(tag).after(pTag)
+                }
+            })
+        })
+
+        //3-2.contains()선택자사용(제이쿼리용)
+        //제이쿼리는 문자(리터럴)로 입력을 받으면 자체에서 parsing함
+        $.each(array3,function(idx,obj){
+            let pTag=$('<p/>').text(`이름 : ${obj['name']}`)
+            //$(`#list p:contains('${obj['area']}')`).append(pTag)
+            $('#list p:contains("'+obj['area']+'")').append(pTag)
+
+        })
+    </script>
+</body>
+</html>

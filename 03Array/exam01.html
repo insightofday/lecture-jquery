@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <div id="list">
+        <!-- 예시)지역:전주,부서:it,이름:ㅇㅇㅇ -->
+        <!-- 근무지역:서울 -->
+        <ul></ul>
+        <!-- 부서:영업 -->
+        <ul></ul>
+        <!-- 부서:생산 -->
+        <ul></ul>
+    </div>
+
+    <script>
+                let arr1=[
+        {"area":"서울","dept":"영업","name":"무대리"},
+        {"area":"부산","dept":"영업","name":"홍대리"},
+        {"area":"대전","dept":"생산","name":"과대리"},
+        {"area":"서울","dept":"생산","name":"김대리"}
+    ]
+        let Ary=$.grep(arr1,function(obj,idx){
+            if(obj.area=='서울'&&obj.dept=='영업'||obj.area=='서울'&&obj.dept=='생산'){
+                return true
+            }else{
+                return false
+            }
+        })
+        $.each(Ary,function(idx,obj){
+            let list=obj.area+ obj.dept+ obj.name
+            console.log(obj.area, obj.dept, obj.name)
+
+                let ulTag=$('#list ul')
+                $(obj).each(function(idx,obj){
+                let liTag=$('<li/>').text(obj.area + obj.dept + obj.name)
+                ulTag.append(liTag)
+        })
+
+        })
+
+        // let ulTag=$('#list ul')
+        // $.each(list,function(idx,list){
+        //     let liTag=$('<li/>').text(list.text)
+        //     ulTag.append(liTag)
+        // })
+        
+
+
+        // let ulTag=$('#list ul')
+        // $(obj).each(function(idx,obj){
+        //     let liTag=$('<li/>').text(obj.area, obj.dept, obj.name)
+        //     ulTag.append(liTag)
+        // })
+        
+        
+
+
+        ////////////////쌤풀이
+        //서울뽑아내기
+        let areaDatas=$.map(arr1,function(obj,idx){
+            if(obj.area=='서울'){
+                return obj
+            }
+        })
+
+
+        //함수로 만들기
+        //let과 const는 선언후에 사용이 가능
+        //let과 const는 중복선언불가능
+        //var는 text='word'하는 식으로 선언가능(text가 var으로 선언된다는 말이 됨) var는 선언된 위치와 관계없이 사용가능+중복선언가능(function도 중복선언 가능:마지막에선언된게사용됨)
+        const appendTag=function (ulTag,datas){
+            $(datas).each(function(idx,obj){
+            let liTag=$('<li/>').text(`지역: ${obj['area']},부서:${obj['dept']},이름:${obj['name']}`)//template문법(혹은 리터럴?)
+            ulTag.append(liTag)
+        })
+    }
+        let ulTag=$('#list > ul:first')//>는 자식선택자!!!!!!!!!
+
+        appendTag(ulTag,areaDatas)//밑에걸함수로바꾼거
+
+        $(areaDatas).each(function(idx,obj){
+            let liTag=$('<li/>').text(`지역: ${obj['area']},부서:${obj['dept']},이름:${obj['name']}`)//template문법(혹은 리터럴?)
+            ulTag.append(liTag)
+        })
+        //부서가영업인거뽑아내기
+        let deptDatas=$.grep(arr1,function(obj,idx){
+            if(obj.dept=='영업'){
+                return true;
+            }else{
+                return false;
+            }
+        })
+        ulTag=ulTag.next();
+        $.each(deptDatas,function(idx,obj){
+            let liTag=$('<li/>').text(obj.area+obj.dept+obj.name)
+            ulTag.append(liTag)
+        })
+        //부서가생산인거뽑아내기
+        deptDatas=$.map(arr1,function(obj,idx){
+            if(obj.dept=='생산'){
+                return obj;
+            }
+        })
+        ulTag=ulTag.next();
+        $(deptDatas).each(function(idx,obj){
+            let liTag=$('<li/>').text(obj.area+obj.dept+obj.name)
+            ulTag.append(liTag)
+        })
+
+
+
+    </script>
+</body>
+</html>
