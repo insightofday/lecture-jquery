@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        table{
+            border: 1px solid darkgrey;
+        }
+        td{
+            border: 1px dotted plum;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        let objAry=[
+            {'empNo':1000,'name':'hong','dept':'sales'},//''==필드
+            {'empNo':1000,'name':'hong2','dept':'sal3es'},
+            {empNo:1000,name:'hon23g',dept:'s3ales'}
+        ]
+        console.log(//objAry[0][empNo],<실행않됌empNo is not defined뜸
+        //[]는 문자열만 인식하기 때문에 따옴표가 없으면 변수로 인식함
+        objAry[0]['empNo'],
+        objAry[0].empNo)//동적으로 변하는 값에는 .못씀 >forin에서는 못슴
+    </script>
+
+
+    <script>
+        $(function(){//ready, 이벤트와 관련해서 html이 다 로딩된 후에 진행돼야 하는 event정의하는 zone
+            selectEmployees();
+        })
+    </script>
+
+
+    <div>
+        <!-- 단건조회등록수정삭제 -->
+        <form id="info">
+            <div>
+                <label for="id">사원번호</label>
+                <input type="number" id="id" name="employee_id">
+            </div>
+            <div>
+                <label for="last">성</label>
+                <input type="text" id="last" name="last_name">
+            </div>
+            <div>
+                <label for="first">이름</label>
+                <input type="text" id="first" name="first_name">
+            </div>
+            <div>
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email">
+            </div>
+            <div>
+                <label for="job">직책</label>
+                <input type="text" id="job" name="job_id">
+            </div>
+            <div>
+                <label for="hireDate">hireDate</label>
+                <input type="date" id="hireDAte" name="hire_date">
+            </div>
+            <button type="button"id="insertBtn">insert</button>
+            <button type="button"id="updateBtn">update</button>
+            <button type="button"id="deleteBtn">delete</button>
+        </form>
+        <hr>
+    </div>
+    <div>
+        <!-- 전체조회 -->
+        <button type="button" id="ckDel">선택삭제</button>
+        <table id="empList">
+
+        </table>
+    </div>
+
+
+    <script>
+        // $('button:first').on('click',function(e){
+        //     let userInfo=getUserInfo()
+        //     createUser(userInfo)
+        // })
+        // function createUser(obj){
+        //     $.ajax({
+        //         url:'http://192.168.0.37/myserver/empInsert',
+        //         type:'post',
+        //         success:function(result){
+        //             if(result!=null){
+        //                 alert(`수정완료 수정시간: ${result['updatedAt']}`)
+        //             }
+        //         },
+        //         error:function(reject){
+        //             console.log(reject)
+        //         }
+        //     })
+        // }
+
+
+        function getUserInfo(){
+            let inputList=$('#info').serializeArray()
+            let userInfo={};
+            $.each(inputList,function(idx,obj){
+                userInfo[obj.name]=obj.value
+            })
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const header=['employee_id','last_name','hire_date','job_id'];
+
+
+
+
+        //util(날짜...)
+        function getDate(sec){
+            let date =new Date(sec)//sec를 일반적인 형식의 날짜로 변경함
+            let year=date.getFullYear()//4자리 연도
+            let month=('0'+(date.getMonth()+1)).substr(-2)//0부터 시작하기 때문에 1더해라+2자리월형식은 이케해라
+            //substr에 음수를 넣으면 뒤에서부터 잘라냄
+            let day=('0'+date.getDate()).substr(-2)
+
+            return year+'-'+month+'-'+day
+        }
+
+
+
+
+
+
+        //DB데이터를 table 에 넣으라
+        function selectEmployees(){
+            $.ajax({
+                url: 'http://192.168.0.37/myserver/empSelect',
+                type: 'get',//post는 requestbody를 필수적으로 요함
+                //따라서 보낼data가 없는 경우 post쓰지마
+                success:function(result){
+                    console.log(result)
+
+                    //create thead
+                    let theadTag=$('<thead/>')
+                    let trTag=$('<tr/>')
+                    for(let idx of header){//위의 const header로 하는 방식
+                        let thTag=$('<th/>').text(idx)
+                        trTag.append(thTag)
+                    }
+                                        //헤더없이하는방식
+                    // for(let idx in result[0]){//forin은 객체내의 필드를 갖고오는 것
+                    //     let thTag=$('<th/>').text(idx)//이거 이차원배열 아님 (이차원은[숫자][숫자])
+                    //     trTag.append(thTag)
+                    // }
+                    theadTag.append(trTag)
+                    $('#empList').append(theadTag)
+
+                    //create tbody
+                    let tbodyTag=$('<tbody/>')
+                    $.each(result,function(idx,obj){
+                        trTag=$('<tr/>')
+                        trTag.on('click',function(e){
+                            let id=e.currentTarget.firstElementChild.textContent
+                            selectEmpInfo(id)
+                        })
+                        for(let field of header){//위의 const header로 하는 방식
+                            let tdTag=$('<td/>').text(obj[field])
+                            trTag.append(tdTag)
+                        }
+
+                                                                //헤더없이하는방식
+                        // for(let field in obj){//td생성
+                        //     let tdTag=$('<td/>').text(obj[field])
+                        //     trTag.append(tdTag)
+                        // }
+                        tbodyTag.append(trTag)
+                        
+                    })
+                    $('#empList').append(tbodyTag)
+
+
+
+                    //나얘~~도전
+                    // for(let idx in result){
+                    //     let theadTag=$('<thead/>')
+                    //     let trTag=$('<tr/>')
+                    //     let tdTag=$('<td/>')
+                    //     tdTag.text('')
+                    // }
+                    // $(result).each(function(idx,obj){
+                    //     let theadTag=$('<thead/>')
+                    //     let trTag=$('<tr/>')
+
+                    //     let tdTag=$('<td/>')
+                    //     tdTag.text(obj['department_id'])
+                    //     trTag.append(tdTag)
+                    //     tdTag=$('<td/>')
+                    //     tdTag.text(obj['commission_pct'])
+                    //     trTag.append(tdTag)
+
+                    // })
+
+                },
+                error:function(reject){
+
+                }
+            })
+            $('<tr/>')
+            $('<thead/>')
+        }
+        function selectEmpInfo(id){
+
+        }
+    </script>
+</body>
+</html>
