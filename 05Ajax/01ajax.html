@@ -97,7 +97,7 @@
                         id=e.currentTarget.closest('tr').firstElementChild.textContent//closest는 js에도 있음 위랑 아래랑 같은 기능을 함
                         deleteUser(id)
                             //tr에 걸린 이벤트는 막아줘야 한다
-                            e.stopPropagation()//방법1(버블링차단) 이걸 맨 위로 올려야 작동하네...?<<<<<<<<<?????????????????왜?
+                            e.stopPropagation()//방법1(버블링차단)
                         //방법2: tr태그의 이벤트핸들러에서...if(e.target.tagName=='BUTTON')return<커렌트타겟으로 하면 안 되고 target으로 해야 함
                     })
                     tdTag=$('<td/>').append(btnTag)
