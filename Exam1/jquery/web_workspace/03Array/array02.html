@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    
+
+    <script>
+        let array1=["서울","대전","부산","진주"]
+        let array2=["korea","japan","russia","jeju"]
+        let obj1={"name":"정부장","area":"seoul"};
+        let array3=[
+            {"name":"kim","area":"daegu"},
+            {"name":"kl","area":"busan"},
+            {"name":"lee","area":"jeju"},
+            {"name":"park","area":"jinju"}
+        ]
+
+        //inArray():indexOf랑비슷함, 데이터있으면 인덱스, 없으면-1
+        //객체, 참조형은 사용불가능하다고 보면 된다
+        if($.inArray("부산",array1)>-1){
+            console.log("있음ㅇㅇ")
+        }
+
+
+        //isArray():매개변수로 넘어온 값이 배열인지?아닌지?
+        //typeof로는 확인불가능(object라고 나옴)
+        console.log("array2의 배열여부 : ",$.isArray(array2))
+        console.log("obj1의 배열여부 : ",$.isArray(obj1))
+
+
+        //$.merge():두개의배열을 하나의배열로변환>새로운 배열로 만드는 게 아니라 첫 번째 매개변수에 두 번째 매개변수를 추가(삽입)하는 형태
+        //(첫번째 매개변수는 바뀌어도 두번째매개변수는변화x)
+        //서로 다른 타입의 배열이라도 결합불가능(근데 추가적인 작업이 필요는 하겠징?)
+        $.merge(array1,array2);
+
+        $.each(array1,function(idx,val){
+            console.log(val)
+        })
+
+    </script>
+    <div id="ex02">
+        <ul>
+            <li>내용1</li>
+            <li>내용2</li>
+            <li id="list3">내용3</li>
+            <li>내용4</li>
+        </ul>
+    </div>
+    <script>
+        //index:선택자를 이용한 결과 중 특정한 검색조건을 만족하는 요소의 인덱스값을 반환
+        //tag를 찾으려면 find, filter등을 사용할 수 있음
+        //다만 몇 번째 인덱스인지를 아는 것은 index가 용이
+        let search=$('#ex02 li')
+        let index=search.index($('#list3'))
+        let tag=search.eq(index)
+        console.log(tag)
+    </script>
+</body>
+</html>

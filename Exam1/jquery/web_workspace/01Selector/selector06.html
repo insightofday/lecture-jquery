@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+</head>
+<body>
+    <!-- 콘텐츠탐색자 -->
+    <div id="outer_wrap">
+    <h1>콘텐츠탐색선택자</h1>
+    <section id="inner_1">
+        <h1>contains(),has()</h1>
+        <p>
+            <span>내용1</span>
+        </p>
+        <p>
+            내용추가<br>
+            <strong>내용2</strong>
+        </p>
+        <p>
+            <span>내용3</span>
+        </p>
+    </section>
+    <section id="inner_2">
+        <h1>not()</h1>
+        <p>내용4</p>
+        <p>내용5</p>
+        <p>내용6</p>
+    </section>
+</div>
+    <script>
+        //contains()태그 내의 텍스트를 검색(제이쿼리)
+        $('#inner_1 p:contains("내용")').css('background-color','skyblue')//정확이'내용'이 아니라 내용이 포함된 것 선택
+
+
+        //has():해당태그를 포함하고 있는 태그를 검색(제이쿼리)
+        $('#inner_1 p:has(strong)').css('border','2px solid gray')
+
+
+        //not():제외하고자 하는 조건(선택자!=tag)지정
+        $('#inner_1 p:not(:eq(2))').css('background-color','orange')//인덱스로 계산함
+        $('#inner_2 p').not(':last').css('color','purple')
+
+        
+    </script>
+    <hr>
+    <div id="outer_content">
+        <section id="in_1">
+            <h2>find(),filter()</h2>
+            <p class="txt1">내용1</p>
+            <p class="txt1">내용2</p>
+            <p class="txt2">내용3</p>
+        </section>
+        <section id="in_2">
+            <h2>filter(function)</h2>
+            <p>idx 0</p>
+            <p>idx 1</p>
+            <p>idx 2</p>
+            <p>idx 3</p>
+        </section>
+    </div>
+    <script>
+        //find:하위요소중에서 검색
+        $('#in_1 .txt1').css('background-color','pink')
+        $('#in_1').find('.txt1').text('하위요소')
+
+
+
+        //filter:선택된요소중에서검색(선택자기반으로 조건주기, 콜백함수이용)
+        //선택자를 이용
+        $('#in_1 p').filter('.txt2').css('color','red')
+        //콜백함수(넘겨받는매개변수가정해져있음:index,element/return은 boolean밖에안됨)이용
+        $('#in_2 p').filter(function(index,element){ 
+            let idx=element.textContent.slice(4,5)
+            return idx%3==0;
+        }).css('color','green')
+
+
+    </script>
+</body>
+</html>

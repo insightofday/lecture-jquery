@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        table{
+            border: 1px solid darkgrey;
+        }
+        td{
+            border: 1px dotted plum;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        let objAry=[
+            {'empNo':1000,'name':'hong','dept':'sales'},//''==필드
+            {'empNo':1000,'name':'hong2','dept':'sal3es'},
+            {empNo:1000,name:'hon23g',dept:'s3ales'}
+        ]
+        console.log(//objAry[0][empNo],<실행않됌empNo is not defined뜸
+        //[]는 문자열만 인식하기 때문에 따옴표가 없으면 변수로 인식함
+        objAry[0]['empNo'],
+        objAry[0].empNo)//동적으로 변하는 값에는 .못씀 >forin에서는 못슴
+    </script>
+
+
+    <script>
+        $(function(){//ready, 이벤트와 관련해서 돔이 다 로딩된 후에 진행돼야 하는 event정의하는 zone
+            selectEmployees();
+            $('#updateBtn').on('click',updateEmpInfo)
+            $('#insertBtn').on('click',insertEmpInfo)
+            $('#deleteBtn').on('click',deleteEmpInfo)
+            $('#checkDel').on('click',checkdEmpInfoDel)
+        })
+    </script>
+
+
+    <div>
+        <!-- 단건조회등록수정삭제 -->
+        <form id="info">
+            <div>
+                <label for="id">사원번호</label>
+                <input type="number" id="id" name="employee_id">
+            </div>
+            <div>
+                <label for="last">성</label>
+                <input type="text" id="last" name="last_name">
+            </div>
+            <div>
+                <label for="first">이름</label>
+                <input type="text" id="first" name="first_name">
+            </div>
+            <div>
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email">
+            </div>
+            <div>
+                <label for="job">직책</label>
+                <input type="text" id="job" name="job_id">
+            </div>
+            <div>
+                <label for="hireDate">hireDate</label>
+                <input type="date" id="hireDAte" name="hire_date">
+            </div>
+            <button type="button"id="insertBtn">insert</button>
+            <button type="button"id="updateBtn">update</button>
+            <button type="button"id="deleteBtn">delete</button>
+        </form>
+        <hr>
+    </div>
+    <div>
+        <button type="button" id="checkDel">선택삭제</button>
+        <table id="empList">
+
+        </table>
+    </div>
+
+
+    <script>
+        // $('button:first').on('click',function(e){
+        //     let userInfo=getUserInfo()
+        //     createUser(userInfo)
+        // })
+        // function createUser(obj){
+        //     $.ajax({
+        //         url:'http://192.168.0.37/myserver/empInsert',
+        //         type:'post',
+        //         success:function(result){
+        //             if(result!=null){
+        //                 alert(`수정완료 수정시간: ${result['updatedAt']}`)
+        //             }
+        //         },
+        //         error:function(reject){
+        //             console.log(reject)
+        //         }
+        //     })
+        // }
+
+
+        function getUserInfo(){
+            let inputList=$('#info').serializeArray()
+            let userInfo={};
+            $.each(inputList,function(idx,obj){
+                userInfo[obj.name]=obj.value
+            })
+        }
+
+
+
+
+
+        const header=['employee_id','last_name','hire_date','job_id'];
+
+
+
+
+        //util(날짜...)
+        function getDate(sec){
+            let date =new Date(sec)//sec를 일반적인 형식의 날짜로 변경함
+            let year=date.getFullYear()//4자리 연도
+            let month=('0'+(date.getMonth()+1)).substr(-2)//0부터 시작하기 때문에 1더해라+2자리월형식은 이케해라
+            //substr에 음수를 넣으면 뒤에서부터 잘라냄
+            let day=('0'+date.getDate()).substr(-2)
+
+            return year+'-'+month+'-'+day
+        }
+
+        //util2
+        //form태그 내부값을 객체로 만들어서 반환(제이쿼리방식)js는 폼데이터(?)라는 클래스가있음
+        function getFormDataObj(form){
+            let formData=$(form).serializeArray()
+            //serializeArray의 객체는 [{'name':'~~','value':'~~'}...]의 형태로 고정되어 있음
+            let formObj={};
+            $.each(formData,function(idx,obj){
+                formObj[obj.name]=obj.value;
+            })
+            return formObj;
+        }
+
+
+
+
+
+
+        //DB데이터를 table 에 넣으라 !!전체조회
+        function selectEmployees(){
+            $.ajax({
+                url: 'http://192.168.0.37/myserver/empSelect',
+                type: 'get',//post는 requestbody를 필수적으로 요함
+                //따라서 보낼data가 없는 경우 post쓰지마
+                success:function(result){
+                    $('#empList').children().remove();//전체조회는 재사용이 많기 때문에 새로 출력되도록
+
+                    //create thead
+                    let theadTag=$('<thead/>')
+                    let trTag=$('<tr/>')
+
+
+                    //선택삭제를 위한 코드/////
+                    let addTh=$('<th/>').text('선택')
+                    trTag.append(addTh)
+
+                    for(let idx of header){//위의 const header로 하는 방식
+                        let thTag=$('<th/>').text(idx)
+                        trTag.append(thTag)
+                    }
+                                        //헤더없이하는방식
+                    // for(let idx in result[0]){//forin은 객체내의 필드를 갖고오는 것
+                    //     let thTag=$('<th/>').text(idx)//이거 이차원배열 아님 (이차원은[숫자][숫자])
+                    //     trTag.append(thTag)
+                    // }
+
+                    theadTag.append(trTag)
+                    $('#empList').append(theadTag)
+
+                    //create tbody
+                    let tbodyTag=$('<tbody/>')
+                    $.each(result,function(idx,obj){
+                        trTag=$('<tr/>')
+                        trTag.on('click',function(e){
+                            if(e.target.tagName=='INPUT')return;
+                            let id=e.currentTarget.firstElementChild.nextElementSibling.textContent//currenttarget==this.td라서textContent
+                            id=$(e.currentTarget).find('td:nth-of-type(2)').text()//위에거랑똑같음 textContent==text()
+                            selectEmpInfo(id)
+                        })
+                         //선택삭제를 위한 코드/////
+                        let addTd=$('<td/>')
+                        let inputTg=$('<input/>').prop('type','checkbox')
+                        addTd.append(inputTg)
+                        trTag.append(addTd)
+
+                        for(let field of header){//위의 const header로 하는 방식
+                            let text=obj[field]//날짜형식변경을 위해 데이터를 분리함
+                            if(field.substr(-4).toLowerCase()=='date'){//hiredate를 이용하지 않고 이렇게 한 이유는 날짜형식이 여러개일수도있기때문에
+                                text=getDate(obj[field])
+                            }
+
+                            let tdTag=$('<td/>').text(text)
+                            trTag.append(tdTag)
+                        }
+
+                                                                //헤더없이하는방식
+                        // for(let field in obj){//td생성
+                        //     let tdTag=$('<td/>').text(obj[field])
+                        //     trTag.append(tdTag)
+                        // }
+                        tbodyTag.append(trTag)
+                        
+                    })
+                    $('#empList').append(tbodyTag)
+
+
+
+                    //나얘~~도전
+                    // for(let idx in result){
+                    //     let theadTag=$('<thead/>')
+                    //     let trTag=$('<tr/>')
+                    //     let tdTag=$('<td/>')
+                    //     tdTag.text('')
+                    // }
+                    // $(result).each(function(idx,obj){
+                    //     let theadTag=$('<thead/>')
+                    //     let trTag=$('<tr/>')
+
+                    //     let tdTag=$('<td/>')
+                    //     tdTag.text(obj['department_id'])
+                    //     trTag.append(tdTag)
+                    //     tdTag=$('<td/>')
+                    //     tdTag.text(obj['commission_pct'])
+                    //     trTag.append(tdTag)
+
+                    // })
+
+                },
+                error:function(reject){
+
+                }
+            })
+            // $('<tr/>')
+            // $('<thead/>')
+        }
+        
+        //단건조회
+        function selectEmpInfo(id){
+            $.ajax({
+                url: 'http://192.168.0.37/myserver/empFind',
+                type: 'get',//get은 uri뒤에 정보가붙고 post는 body에 정보를 붙임
+                data: {employee_id : id}
+            })
+            .done(data=>{//fetch의 done과 비슷함 success를 대체하는 것. 통신과 내용을 구분해서 명확함
+                //console.log(data)
+                for(let field in data){
+                let selector='form input[name="'+field+'"]'
+                //제이쿼리에서는 검색값이 없어도 오류가 나지 않지만 js에서는 value가 없으면 오류나기때문에 object의 정보의 일부만 화면에 출력하려고 할 때 곤란한상황이,,
+                if(field.substr(-4).toLowerCase()=='date'){
+                    value=getDate(data[field])
+                }
+            //$(selector).val(data[field])
+        }
+
+            //js에도 문제없이 돌아가는 방식> 입력폼의 name을 기준으로 값 갖고오기
+            let inputList=$('form input')
+            inputList.each(function(idx,tag){
+                let field=tag.getAttribute('name')
+                let value=data[field]
+                if(field.substr(-4).toLowerCase()=='date'){
+                    value=getDate(data[field])
+                }
+                tag.value=value;
+
+                })
+            })
+            .fail(reject=>console.log(reject))
+            .always(()=>console.log('단건조회 실행 끝'))//finally와 같은 것(무족건실행)
+        }
+
+
+
+        
+        function getEmpInfo(){            //함수를 이용해서 만드는 게 조와
+            return getFormDataObj('#info');
+        }
+
+        //수정
+        function updateEmpInfo(event){
+            let empInfo=getEmpInfo();//object
+        $.ajax({
+            url: 'http://192.168.0.37/myserver/empUpdate',
+            type: 'post',//form>key:value형식
+            data: empInfo,//object타입을 가져야야 함,empInfo는 object이기때문에 바로써도됨
+            success:function(result){
+                if(result!=null){
+                    selectEmployees();
+                }
+            } ,
+            error:function(reject){
+                console.log(reject)
+            }
+        })
+        }
+
+
+
+
+        ///등록
+        function insertEmpInfo(event){
+            let empInfo=getEmpInfo()
+            $.ajax({
+                url:'http://192.168.0.37/myserver/empInsert',
+                type:'post',
+                data: empInfo,
+                success:function(result){
+                    console.log(result)
+                    if(result!=null){
+                        selectEmployees()
+                    }
+                },
+                error:function(reject){
+                    console.log(reject)
+                }
+            })
+        }
+
+
+        //삭제
+        function deleteEmpInfo(event){
+            //삭제할 사원번호(object전체가 필요하진 않음)
+            let formTag=event.currentTarget.closest('form')
+            let empId=$(formTag).find('input[name="employee_id"]').val()
+
+            //서버에 전송
+            let empInfo=getEmpInfo()
+            $.ajax({
+                url:'http://192.168.0.37/myserver/empDelete',
+                type:'post',
+                data://empInfo
+                    {employee_id : empId},
+                //form이라서 contenttype필요없음
+                success:function(data,status,xhr){
+                    selectEmployees()
+                }
+            })
+        }
+
+
+
+
+
+        //선택삭제
+        function checkdEmpInfoDel(e){
+            let checkedEmps=[]
+            $('input[type="checkbox"]:checked').val()//이거못씀 이 파일에서 checkbox의 값이 없기때문
+            $('input[type="checkbox"]:checked').each(function(idx,input){
+                let empId=input.parentNode.nextElementSibling.textContent
+                //nextSibling은 공백이든, 텍스트든 가리지 않고 다음에 있는 것을 가져오게 되고,
+                //nextElementSibling 은 Element(요소)만 가져옴
+                let empObj={employee_id : empId}
+                checkedEmps.push(empObj)
+            })
+            $.ajax({
+                url:'http://192.168.0.37/myserver/deleteEmpList',
+                type:'post',
+                contentType:'application/json',
+                data: JSON.stringify(checkedEmps),
+                success:function(result){
+                    if(result!=null){
+                        let message=result.success+'건이 삭제되었습니다'//success==성공한 횟수
+                        alert(message)
+                        selectEmployees()
+                    }
+                },
+                error:function(reject){
+                    console.log(reject)
+                }
+            })
+
+        }
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <div id="ex01">
+        <h1>array method</h1>
+        <ul id="menu1">
+            <li>ㄴㅇ1-1</li>
+            <li>ㄴㅇ1-2</li>
+            <li>ㄴㅇ1-3</li>
+        </ul>
+        <ul id="menu2">
+            <li>ㄴㅇ2-1</li>
+            <li>ㄴㅇ2-2</li>
+            <li>ㄴㅇ2-3</li>
+        </ul>
+    </div>
+    <script>
+        const obj=[
+            {"area":"seoul"},
+            {"area":"busan"},
+            {"area":"jinju"}
+        ]
+
+        //콜백함수의 파라미터는 정해져있는 것을 써야함(인터페이스에 비유해서 이해하면 댄대)
+
+        //each()==foreach 배열순환
+        let ulTag=$('<ul/>')//<>:새로운 태그 생성
+        $(obj).each(function(index,object){
+            let liTag=$('<li/>').text(object.area)//2  1이랑 2랑 같음
+            //let liTag=$('<li/>').text(object[area])//1  1이랑 2랑 같음
+            ulTag.append(liTag)
+        });//인스턴스의 method로서의 each 위랑 아래랑 같음
+        $('#ex01').append(ulTag)
+
+
+        ulTag=$('<ul/>')
+        $.each(obj,function(index,object){//전역변수로서의 each 위랑 아래로 같음 each(순환시키려는 배열, 배열에 적용시킬 작업)
+            let liTag=$('<li/>').text(object.area)
+            ulTag.append(liTag)
+        })
+        let liList=ulTag.children();
+        $(liList).each((index,object)=>{
+            console.log(object.tagName,object.textContent)
+        })
+
+        $.each($('#ex01 ul:first *'),(index,object)=>{//여기에서 object는 li태그
+            console.log(object.textContent)
+            console.log($(object).text())//제이쿼리로 표현
+        })//ul:first * ul의 하위요소 전부 
+
+        //문자열, 배열을 다루는 메서드는 언어와 관계없이 다 알아주면 조왕(제이쿼리는 유사배열이랭)
+        //js는 변수에 함수를 담을 수 있음
+    </script>
+
+    <script>
+        let arr1=[
+            {"area":"서울","dept":"영업","name":"무대리"},
+            {"area":"부산","dept":"영업","name":"홍대리"},
+            {"area":"대전","dept":"생산","name":"과대리"},
+            {"area":"서울","dept":"생산","name":"김대리"}
+        ]
+        //map과 grep은 모두 기존의 객체에 수정 하는 것은 아님
+
+        //$.map()>return 값만 가지고 새로운 배열
+        let mapAry=$.map(arr1,function(obj,idx){
+            if(obj.area=="서울"){
+                return obj.name
+            }
+        })
+        let areaAry=$.map(arr1,function(obj,idx){
+            return obj.area
+        })
+        console.log('현재사원들의근무지현황')
+        $(areaAry).each(function(idx,value){
+            console.log(value)
+        })
+
+
+
+        //$.grep()>return값이 true인 배열값만 가지고 새로운 배열:오름차순 정렬
+        //배열이 갖고 있는 type이 변하지 않음
+        let grepAry=$.grep(arr1,function(obj,idx){
+            if(obj.dept=="영업"){
+                return true
+            }else{
+                return false;
+            }
+        })
+        let seoulAry=$.grep(arr1,function(obj,idx){
+            if(obj.area=='서울'){
+                return obj.area=='서울'?true:false;
+            }
+        })
+        $.each(seoulAry,function(idx,obj){
+            console.log(obj.area,obj.dept,obj.name)
+        })
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+</head>
+<body>
+    <!-- 관계선택자 -->
+    <div id="wrap">
+        <div id="inner_wrap">
+            <h1>제목1</h1>
+            <h2>제목2</h2>
+            <h3>제목3</h3>
+            <p>내용</p>
+            <div>
+                <h1>하위요소1</h1>
+                <h2>하위요소2</h2>
+            </div>
+        </div>
+    </div>
+    <script>
+        //제리쿼리는 오류 딱히 발생안시키니까 주의하자~~
+
+        //자식!=자손!=하위요소
+
+        //부모선택자(메소드로 접근)
+            $('#inner_wrap').parent().css('border','1px solid black');//s붙으면 상위요소
+
+        //하위요소선택자
+            $('#wrap h1').css('color','blue')
+
+        //자식요소선택자(아래것은 제이쿼리에서 메서드로 제공하는 것)
+            $('#inner_wrap >h1').text('자식요소로 선택')
+            $('#inner_wrap').children('h2').text('자식요서선택자이지롱ㅎㅎ')//복수형이라서 childeren썼음
+            $('#inner_wrap').children().text('이렇게도 되지롱ㅎㅎ')
+
+            $('div>h1')//2개가 선택됨
+
+    </script>
+    <br>
+
+
+
+
+    <div id="content">
+        <h1>인접관계선택자</h1>
+        <p>11111111</p>
+        <p class="txt">22222222222222222</p>
+        <p>333333333333333</p>
+        <p>444444444444444</p>
+        <span>extra</span>
+    </div>
+
+
+    <script>
+        //형언니 요소선택자
+        $('.txt').prev().css('background-color','#0ff')
+                .css('border','2px solid #f00');
+        $('.txt').prevAll().text('이전요소들 전부다?')
+        $('.txt').prevUntil('h1').css('border','10px solid green')//prevuntil(h1)h1만나기전까지로범위설정
+
+        //동생 요소선택자
+        $('.txt').next().next().css('color','gray')
+        $('.txt').nextAll().text('다음요소들')
+        $('.txt').nextUntil('span').css('border','10px solid skyblue')
+        $('.txt+p').text('choice')//바로 뒤에 있으면서+p인거
+    </script>
+
+
+
+
+
+    <hr>
+    <div>
+        <h5 class="title">selector</h5>
+        <section>
+            <div>
+                <p class="txt1">content1</p>
+            </div>
+        </section>
+        <section>
+            <div>
+                <p class="txt2">content2</p>
+            </div>
+        </section>
+    </div>
+    <script>
+        //상위요소선택자\
+        $('.txt2').parents('div').css('border','3px solid gray')//parents는 조상임ㅎㅋ
+        //가장 가까운 상위요소선택자
+        $('.txt1').closest('div').css('border','5px solid black')
+        //전체형제요소선택자(자신을제외)
+        $('h5').siblings().css('background-color','pink')
+
+    </script>
+</body>
+</html>

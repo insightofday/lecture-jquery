@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <p>
+        <img src="https://place-hold.it/300X300" class="img1">
+    </p>
+
+    <script>
+        //js에서 페이지로딩과 관련된 이벤트
+        window.onload=function(e){}//dom이후에 들어오는 외부정보(멀티미디어)가 완성이 된 이후(예:imgtag,iframtag,video,embed...)
+        //window가 document보다 상위개념임 document의 원형>window.document
+        document.addEventListener('DOMContentLoaded',function(e){})
+
+        //제이쿼리에서 페이지로딩과 관련된 이벤트
+        //ready(돔완성)html문서 로딩이 완료
+        //deprecated:$(document).ready(function(){})
+        $(function(){
+            let h1=$('.img1').height()
+            console.log("ready : ", h1)
+        })
+
+        //load(페이지완성)외부연동된 코드(src)까지 연동(jquery3버전까지만?3에서만?되는거임)
+        $(window).on('load',function(){
+            let h2=$('.img1').height()
+            console.log("load : ", h2)
+        })
+
+    </script>
+</body>
+</html>

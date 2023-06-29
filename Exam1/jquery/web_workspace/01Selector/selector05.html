@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="wrap">
+        <p>내용1</p>
+        <p style="display:none">내용2</p>
+    </div>
+    <form action="#">
+        <p id="zone1">
+            <select name="course" id="course">
+                <option value="opt1">option1</option>
+                <option value="opt2" selected>option2</option>
+                <option value="opt3">option3</option>
+            </select>
+        </p>
+        <p id="zone2">
+            <input type="checkbox" name="hobby1" value="book">reading
+            <label><input type="checkbox" name="hobby2" value="bike" checked>bike</label>
+            <label><input type="checkbox" name="hobby" value="hiking" checked>hiking</label>
+        </p>
+        <p id="zone3">
+            <input type="radio" name="gender"value="male">man
+            <input type="radio" name="gender" value="female"checked>female
+        </p>
+    </form>
+    <script>
+        //hidden,visible
+        $('#wrap p:hidden').css('display','block')//안 보이는 걸 보이게하기
+        $('#wrap p:visible').css('display','none')//보이는 걸 안 보이게 하기
+
+
+        //selected(select태그에서 선택된 option!=value)
+        let selectedvalue=$('#course').val()
+        let selected=$('#course :selected').val()
+        //이 두개는 똑같음
+        selected=$('#course :selected')
+        //이건 쫌,,다름
+        console.log(selected)
+        console.log(selectedvalue)
+
+
+        //js로 변환하기
+        $('#course:selected')//제이쿼리
+        let jsSelect=document.getElementById('course')
+        let selectedOpt=jsSelect.options[jsSelect.selectedIndex]
+        console.log(selectedOpt)
+
+        selectedvalue=$('#course').val()//제이쿼리
+        jsSelect=document.getElementById('course').value
+
+
+
+
+
+        //checked(checkbox, radio의 선택된 input태그를 갖고옴)
+        //checkbox(복수허용>배열로 접근하자!!)
+        let tags=$('#zone2 :checked')//#zone2:checked로 쓰면 안 됨!!!!!zone2뒤에 띄어쓰기 있어야 함 >하위요소에서 검색한다는 의미
+        for(let i=0;i<tags.length;i++){
+            console.log(tags[i].value);
+        }
+        //radio(1건뿐이얌~)
+        content=$('#zone3 :checked').val();
+        for(let i=0;i<tags.length;i++){
+            console.log(tags[i].value);
+        }
+
+        //각각을 js로 고치면...?
+        tags=document.querySelectorAll('input[name^="hobby"]:checked')//밑에거랑 똑같음
+        document.querySelectorAll('#zone2 input:checked')//위랑 아래랑 똑같음
+        for(let i=0;i<tags.length;i++){
+            console.log(tags[i].value);
+        }
+        content=document.querySelector('input[name="gender"]:checked').value
+        console.log(content)
+
+
+    </script>
+</body>
+</html>

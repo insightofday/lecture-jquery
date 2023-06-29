@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <style>
+        .aqua{background-color:aqua}
+        .red{background-color: red;}
+        .green{background-color:green;}
+        .yellow{background-color: yellow;}
+    </style>
+</head>
+<body>
+    <div id="ex01">
+        <h1>
+            <strong>객체조작및생성</strong>
+        </h1>
+        <section id="sec_1">
+            <h2>
+                <em>html()</em>
+            </h2>
+            <p>내용1</p>
+        </section>
+        <section id="sec_2">
+            <h2>
+                <em>text()</em>
+            </h2>
+            <p>내용2</p>
+        </section>
+    </div>
+
+    <script>
+        //val() value(사용자가입력한값)속성을제어>value속성을 가지는 태그:input, textarea, select(option)
+
+
+        //html() innerHTML과 같음, 태그의 모든 하위요소를 갖고와서 문자열로 반환>권장xx innerHTML도 권장않함!(html, css, js는 보안에 취약함>
+        //브라우저가 compile하기때문에 바이너리코드가 아닌 코드를 모두 볼 수 있고 변경할 수 있음, 따라서 innerhtml로 내부를 전면에 노출하면 위험해)
+        let html=$('#sec_1').html();
+        console.log(html)
+        //요거 알려는 줬는데 보안문제가 있으니까 쓰진 마라~~~~
+        html=$('#sec_1').html('<a href="#">text1</a>');
+       
+
+
+        //text() 모든 txt반환(하위요소의 txt포함) textContent와 같음
+        let text=$('#sec_2').text()
+        console.log(text)
+        text=$('#sec_2').text('<a href="#">text1</a>')
+        
+
+
+        //css()
+        $('#sec_1').css('background-color','orange').css('border','2px solid black')
+        $('#sec_2').css({'background-color':'skyblue', 'border':'1px solid red'})
+
+
+
+    </script>
+    <hr><hr>
+    <div id="ex02">
+        <p id="p1">content1</p>
+        <p id="p2">content2</p>
+        <p id="p3">content3</p>
+        <p id="p4" class="green">content4</p>
+        <p id="p5" class="yellow">content5</p>
+        <p id="p6">content6</p>
+    </div>
+    <script>
+        //js
+        document.getElementById('p1').className="cherry"//1나만 불러올 수 있음
+        document.getElementById('p1').classList
+
+        //제이쿼리:class속성(순수하게 복수의 값을 가짐)
+        
+        //기존class속서엥 값을 추가(리턴:제이쿼리객체)
+        //addClass()
+        $('#p1').addClass('aqua')
+
+
+        //기존class속성에서 원하는 값을 삭제(리턴:제이쿼리객체)
+        //removeClass()
+        $('#p1').removeClass();
+        $('#p1').removeClass('red')//레드라는속성을삭제>위에 그런 게 있어서 변하는거업슴
+
+        //기존class속성에 있으면 삭제, 없으면 추가(리턴:제이쿼리객체)
+        //toggleClass()
+        $('#p3').toggleClass('green')
+        $('#p4').toggleClass('green')
+
+        //기존class에 해당값이 존재하는지 유무를 확인(boolean)
+        //hasClass()
+        let result=$('#p5').hasClass('yellow')
+        console.log(result)
+        $('#p6').text(result)
+    </script>
+    <hr><hr>
+    <div id="ex03">
+        <h1>
+            <strong>객체 조작 및 생성</strong>
+        </h1>
+        <section id="sec01">
+            <h2>
+                <img src="clover.PNG" alt="img" style="border:2px solid black;height: 300px;">
+            </h2>
+        </section>
+        <a id="get_comment" href="#comments">comments</a>
+    </div>
+    <script>
+        //attr():attribute html(tag)의 attribute조작 
+        //html을 로딩하는 순간 각 태그가 갖고 있는 속성을 제어
+        let varAttr=$('#sec01 img').attr('src')
+        console.log('attr',varAttr)
+        $('#sec01 img').attr('width',500)//되긴한데 권장은 안함
+
+        //prop():property dom의 property조작/표준attribute에는 1대1대응이 되지만, 사용자정의속성은 조작불가능
+        //사이트가 종료되기 전 까지 동적으로 변경되는 속성값을 제어
+        let varProp=$('#sec01 img').prop('src')
+        console.log('prop',varProp)
+        $('#sec01 img').prop('width',100)
+
+    </script>
+    <div id="ex04">
+        <form action="#" id="form_1">
+            <div>
+                <label for="chk1">check1
+                    <input type="checkbox" name="chk1" id="chk1">
+                </label>
+                <label for="chk2">check2
+                    <input type="checkbox" name="chk2" id="chk2" checked>
+                </label>
+                <label for="chk3">check3
+                    <input type="checkbox" name="chk3" id="chk3">
+                </label>
+            </div>
+            <div>
+                <select name="select_1" id="select_1">
+                    <option value="opt1">opt1</option>
+                    <option value="opt2">opt2</option>
+                    <option value="opt3" selected>opt3</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <script>
+        $('#chk2').prop('checked',false)
+        let checkVal=$('#chk2').prop('checked')
+        console.log('prop is',checkVal)//동적 상태가 반영됨(checked가 풀리면 그것이 반영됨)
+
+        checkVal=$('#chk2').attr('checked')
+        console.log('attr is...',checkVal)//attr은 동적상태반영x:초기값만 들고와서 checked풀린거 몰음
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <h1>탐색선택자1</h1>
+        <ul id="menu">
+            <li>내용1</li>
+            <li>내용2</li>
+            <li>내용3</li>
+            <li>내용4</li>
+            <li>내용5
+                <li>add</li>
+            </li>
+        </ul>
+    </div>
+    <script>
+        //first&last
+        $('#menu li:first').text('first 변경')//자식의 first가 아님 선택자의 값 중 첫째임
+        let liList=$('#menu li')
+        $('#menu li').first().css('color','pink')//위에랑 똑같음
+        
+
+        $('#menu li:last').text('last change plz')//결과에 대해 마지막이라서 add가 변경됨
+        $('#menu li:last').last().css('color','skyblue')//위랑 똑같음
+
+        //1부터 셌을 때 even(홀수:인덱스로는 짝수)odd(짝수:인덱스로는 홀수)
+        let oddTag=$('#menu li:odd');
+
+              //forof==foreach()
+        for(let tag of oddTag){
+            console.log(tag)
+        }
+
+        let tObj={
+            'employeeId':100,
+            'firstName':'steven',
+            'lastName':'King'
+        }
+        
+        //forin 모든 객체를 순환하는 포문(필드(메소드랑 비슷함)값 출력) collection의iterator이랑 비슷~
+        for(let index in tObj){
+            console.log(index)
+        }
+        let ary=[100,'steven','king']//forin에서 배열도 가능하나 인덱스가 출력됨
+        for(let idx in ary){
+            console.log(idx)
+        }
+
+        for(let idx in ary){
+            console.log(idx, ary[idx], ary.idx)//값 출력하려면 대괄호 써야함 옆에껀안됨
+        }
+
+        //eq,lt,gt(index활용)
+        $('#menu li:eq(3)').text('내용수정')
+        $('#menu li').eq(3).css('color','gray')
+
+        //lt:기준인덱스값보다 작은 것 gt:기준인덱스보다 큰 것
+        $('#menu li:lt(2)').text('lt를 바꿨습니다앙')
+
+    </script>
+    <div >
+        <h1>탐색선택자</h1>
+        <ol style="list-style: none;">
+            <p>피태그삽입</p>
+            <li>내용1-1</li>
+            <li>내용1-2</li>
+            <li>내용1-3</li>
+            <li>내용1-4</li>
+            <li>내용1-5</li>
+            <li>내용1-6</li>
+            <li>내용1-7</li>
+        </ol>
+        <ol style="list-style: none;">
+            <li>내용2-1</li>
+            <li>내용2-2</li>
+            <li>내용2-3</li>
+            <li>내용2-4</li>
+            <li>내용2-5</li>
+            <li>내용2-6</li>
+            <li>내용2-7</li>
+        </ol>
+        <ol style="list-style: none;">
+            <li>추가된내용</li>
+        </ol>
+    </div>
+    <script>
+        //nthoftype(타입체크를 겸함)
+        //밑에서는 li인지 타입체크를 함
+        $('ol li:first').text('첫번째')//결과중첫번째
+        $('ol li:first-of-type').text('첫번째')//각그룹중첫번째
+        $('ol li:last-of-type').text('막번째')//각그룹중첫번째
+
+        //nthchild(타입체크따로안함)
+        //nthchild는 모든 자식의 순서에서 찾지만
+        //nthoftype은 해당하는 자식 태그 요소에서의 순서를 찾는다
+        //둘다 인덱스로 수를 세지 않음! 일반적인 수세기~
+        $('ol li:nth-child(1)').text('nthchild1번째')//li중의 n번째라는 의미가 아님.1번째가 li태그가 아닌 경우 적용이 안 됨
+        $('li:nth-child(3n)').css('border','skyblue 2px solid')//n배수 ㄱㄴ 자식 중 3배수 인 태그가 li면 적용이 됨
+
+        $('li:only-child').text('형제없는 li에 적용됨')
+
+        $('ol li').slice(1,3).css('background-color','gray')//substring과 유사
+
+
+    </script>
+</body>
+</html>
